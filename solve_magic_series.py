@@ -8,11 +8,11 @@ from solver.domain import MISSING_CHAR, Domain
 
 logging_path = os.path.join(os.getcwd(), "text_log.log")
 
-logging.basicConfig(level=logging.DEBUG,
+logging.basicConfig(level=logging.INFO,
     format="%(levelname)s - %(asctime)s - %(msg)s",
     datefmt="%Y-%m-%d %H:%M:%S",
     handlers=[
-        logging.FileHandler(logging_path),
+        # logging.FileHandler(logging_path), # For debug
         logging.StreamHandler(),
     ])
 
@@ -63,7 +63,7 @@ def main():
         except (ValueError, AssertionError) as e:
             print("Wrong input. Write positive integer")
             continue
-            
+
     d = Domain(length)
     return solve(d)
 

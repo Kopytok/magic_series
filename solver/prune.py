@@ -39,6 +39,7 @@ def pruneSumEqLen(domain):
         logging.debug("Domain after row check:\n%s" % repr(domain))
 
 def pruneLessThanCurSum(domain):
+    """ Fill with 0 values less than current number of occurences """
     numbers = domain.toDigits()
     for num in numbers:
         if num > -1:
@@ -48,8 +49,8 @@ def pruneLessThanCurSum(domain):
                     domain.grid[value, position] = 0
 
 def pruneKnownRowSum(domain):
-    numbers = domain.toDigits()
-    for position, value in enumerate(numbers):
+    """ Fill row if corresponding value already solved """
+    for position, value in enumerate(domain.toDigits()):
         if value > -1 and domain.rowSum(position) == value:
             domain.grid[position, :] = \
                 [x if x > -1 else 0 for x in domain.grid[position, :]]
@@ -67,6 +68,7 @@ def pruneFillColumn(domain):
         domain.grid[:, position] = col.copy()
 
 def pruneSumReady(domain):
+    """ Decide number at position if already filled corresponding row """
     for value, row in enumerate(domain.grid):
         if -1 not in row and sum(row) < len(row):
             domain[value] = int(sum(row))
