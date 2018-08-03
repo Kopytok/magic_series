@@ -1,6 +1,6 @@
 # Magic series
 
-Search for Magic series using constraints programming.
+Search for the Magic series using constraints programming.
 
 ----------------------
 
