@@ -34,7 +34,8 @@ def pruneSumEqLen(domain):
                     sum([t * n for t, n in enumerate(max_eval)]) < length,
                 ]
 
-                if reduce(lambda x, y: x | y, constraints):
+                if reduce(lambda x, y: x | y, constraints) and\
+                        nanCnt(domain.grid[:, position]) > 1:
                     domain.grid[value, position] = 0
         logging.debug("Domain after row check:\n%s" % repr(domain))
 
@@ -45,7 +46,9 @@ def pruneLessThanCurSum(domain):
         if num > -1:
             num_cnt = [x for x in numbers if x == num]
             for value, position in enumerate(num_cnt):
-                if domain.grid[value, position] == -1:
+                if domain.grid[value, position] == -1 and\
+                        (rowSum(domain.grid[:, position]) > 0 or
+                         nanCnt(domain.grid[:, position]) > 1):
                     domain.grid[value, position] = 0
 
 def pruneKnownRowSum(domain):
@@ -79,8 +82,8 @@ def prune(domain):
         "pruneSumEqLen",
         "pruneLastMissingNumber",
         "pruneLessThanCurSum",
-        "pruneKnownRowSum",
         "pruneFillColumn",
+        "pruneKnownRowSum",
         "pruneSumReady",
     ]
     for func in constraints:

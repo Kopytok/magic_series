@@ -75,7 +75,7 @@ class Domain(object):
             elif -1 not in col:
                 logging.info("Wrong domain")
                 logging.info("\n%s" % repr(self))
-                quit()
+                eval_numbers.append(100) # Wrong domain
             else:
                 missing = np.where(col == -1)[0]
                 logging.debug("Eval. n: {}\tcol: {}\tmissing: {}".format(n, col, missing))
@@ -110,17 +110,13 @@ class Domain(object):
         """ Test if domain is feasible """
         rng = range(len(self))
         for value, position in product(rng, rng):
-            logging.debug("Feasibility. Value: {}\tPosition: {}".format(value, position))
             it = self.grid[value, position]
             if it > -1:
                 row_sum = self.rowSum(position)
                 nan_cnt = self.nanCnt(position)
-                logging.debug("Feasibility. row sum: {}\tnan cnt: {}".format(row_sum,
-                                                                nan_cnt))
                 try:
                     available = range(row_sum, row_sum + nan_cnt + 1)
                     left_values = [x for x in available if x != value]
-                    logging.debug("Feasibility. Left values: {}".format(left_values))
                     assert (it == 1 and value in list(available)) or \
                            (it == 0 and len(left_values))
                 except AssertionError as e:
