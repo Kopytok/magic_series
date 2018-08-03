@@ -54,9 +54,18 @@ def solve(domain):
     logging.info("Solved in %02d:%02d\n" % divmod(time.time() - t0, 60))
     return answer
 
-def main(length):
+def main():
+    while True:
+        try:
+            length = int(input("Input series length as positive integer: "))
+            assert length > 0
+            break
+        except (ValueError, AssertionError) as e:
+            print("Wrong input. Write positive integer")
+            continue
+            
     d = Domain(length)
     return solve(d)
 
 if __name__ == "__main__":
-    main(5)
+    main()

@@ -16,11 +16,13 @@ def pruneLastMissingNumber(domain):
             domain[numbers.index(-1)] = last_value
 
 def pruneSumEqLen(domain):
-    """ Check """
+    """ Check if sum of digits may be equal to len of series """
     length = len(domain)
     out = domain.copy()
     for value, row in enumerate(out.grid):
+        logging.debug("Value: {}\tRow: {}".format(value, row))
         for position, it in enumerate(row):
+            logging.debug("Position: {}\It: {}".format(position, it))
             if it == -1:
                 min_eval = out.eval(value, position, how='min')
                 max_eval = out.eval(value, position, how='max')
@@ -32,8 +34,9 @@ def pruneSumEqLen(domain):
                     sum([t * n for t, n in enumerate(max_eval)]) < length,
                 ]
 
-                if reduce(lambda x, y: x or y, constraints):
+                if reduce(lambda x, y: x | y, constraints):
                     domain.grid[value, position] = 0
+        logging.debug("Domain after row check:\n%s" % repr(domain))
 
 def pruneLessThanCurSum(domain):
     numbers = domain.toDigits()
@@ -52,13 +55,14 @@ def pruneKnownRowSum(domain):
                 [x if x > -1 else 0 for x in domain.grid[position, :]]
 
 def pruneFillColumn(domain):
+    """ Fill column if only 1 item is missing or position already solved """
     temp = domain.copy()
     for position, col in enumerate(temp.grid.T):
         # Fill the last missing value within column
-        if domain.nanCnt(position) == 1:
-            col = [x if x > -1 else 1 - domain.rowSum(position) for x in col]
+        if nanCnt(col) == 1:
+            col = [x if x > -1 else 1 - rowSum(col) for x in col]
         # Fill with '0' if there's already 1 in column
-        if domain.rowSum(position) == 1:
+        if rowSum(col) == 1:
             col = [0 if x != 1 else 1 for x in col]
         domain.grid[:, position] = col.copy()
 
@@ -70,14 +74,14 @@ def pruneSumReady(domain):
 def prune(domain):
     pruned = domain.copy()
     constraints = [
-        "pruneFillColumn",
         "pruneSumEqLen",
         "pruneLastMissingNumber",
         "pruneLessThanCurSum",
         "pruneKnownRowSum",
+        "pruneFillColumn",
         "pruneSumReady",
     ]
     for func in constraints:
         eval("%s(pruned)" % func)
-        logging.debug("After {}:\n{}".format(func, repr(domain)))
+        logging.debug("After {}:\n{}".format(func, repr(pruned)))
     return pruned
