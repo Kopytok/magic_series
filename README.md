@@ -4,14 +4,14 @@ Search magic series using constraints programming
 
 ----------------------
 
-__Def__ A series $S=(S_0, S_1, ..., S_n)$ is magic if $S_i$ represents the number of occurences of $i$ in $S$
+__Def__ A series ![Series](https://latex.codecogs.com/gif.latex?S%3D%28S_0%2C%20S_1%2C%20...%2C%20S_n%29) is magic if $S_i$ represents the number of occurences of i in S
 
 
 |   | 0 | 1 | 2 | 3 | 4 |
 |---|---|---|---|---|---|
 |Occurences| ? | ? | ? | ? | ? |
 
-**For example**:
+**Ex**:
 
 |   | 0 | 1 | 2 | 3 | 4 |
 |---|---|---|---|---|---|
