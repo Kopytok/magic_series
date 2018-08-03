@@ -7,14 +7,6 @@ def nanCnt(lst):
 def rowSum(lst):
     return sum(int(x) for x in lst if x > -1)
 
-def pruneLastMissingNumber(domain):
-    """ Fill in last missing number """
-    numbers = domain.toDigits()
-    if nanCnt(numbers) == 1:
-        last_value = len(domain) - rowSum(numbers)
-        if last_value < len(numbers):
-            domain[numbers.index(-1)] = last_value
-
 def pruneSumEqLen(domain):
     """ Check if sum of digits may be equal to len of series """
     length = len(domain)
@@ -38,6 +30,14 @@ def pruneSumEqLen(domain):
                         nanCnt(domain.grid[:, position]) > 1:
                     domain.grid[value, position] = 0
         logging.debug("Domain after row check:\n%s" % repr(domain))
+
+def pruneLastMissingNumber(domain):
+    """ Fill in last missing number """
+    numbers = domain.toDigits()
+    if nanCnt(numbers) == 1:
+        last_value = len(domain) - rowSum(numbers)
+        if last_value < len(numbers):
+            domain[numbers.index(-1)] = last_value
 
 def pruneLessThanCurSum(domain):
     """ Fill with 0 values less than current number of occurences """
