@@ -72,10 +72,6 @@ class Domain(object):
                 eval_numbers.append(np.where(col == 1)[0][0])
             elif n == position:
                 eval_numbers.append(value)
-            elif -1 not in col:
-                logging.info("Wrong domain")
-                logging.info("\n%s" % repr(self))
-                eval_numbers.append(100) # Wrong domain
             else:
                 missing = np.where(col == -1)[0]
                 logging.debug("Eval. n: {}\tcol: {}\tmissing: {}".format(n, col, missing))

@@ -2,13 +2,15 @@ import logging
 from functools import reduce
 
 def nanCnt(lst):
+    """ Count missing items in `lst` """
     return len([x for x in lst if x == -1])
 
 def rowSum(lst):
+    """ Sum of non-missing items in `lst` """
     return sum(int(x) for x in lst if x > -1)
 
 def pruneSumEqLen(domain):
-    """ Check if sum of digits may be equal to len of series """
+    """ Check if sum of digits may equal to len of series """
     length = len(domain)
     out = domain.copy()
     for value, row in enumerate(out.grid):
@@ -26,8 +28,7 @@ def pruneSumEqLen(domain):
                     sum([t * n for t, n in enumerate(max_eval)]) < length,
                 ]
 
-                if reduce(lambda x, y: x | y, constraints) and\
-                        nanCnt(domain.grid[:, position]) > 1:
+                if reduce(lambda x, y: x | y, constraints):
                     domain.grid[value, position] = 0
         logging.debug("Domain after row check:\n%s" % repr(domain))
 
@@ -46,9 +47,7 @@ def pruneLessThanCurSum(domain):
         if num > -1:
             num_cnt = [x for x in numbers if x == num]
             for value, position in enumerate(num_cnt):
-                if domain.grid[value, position] == -1 and\
-                        (rowSum(domain.grid[:, position]) > 0 or
-                         nanCnt(domain.grid[:, position]) > 1):
+                if domain.grid[value, position] == -1:
                     domain.grid[value, position] = 0
 
 def pruneKnownRowSum(domain):
@@ -73,7 +72,7 @@ def pruneFillColumn(domain):
 def pruneSumReady(domain):
     """ Decide number at position if already filled corresponding row """
     for value, row in enumerate(domain.grid):
-        if -1 not in row and sum(row) < len(row):
+        if -1 not in row and sum(row) <= len(row):
             domain[value] = int(sum(row))
 
 def prune(domain):
@@ -87,6 +86,9 @@ def prune(domain):
         "pruneSumReady",
     ]
     for func in constraints:
-        eval("%s(pruned)" % func)
-        logging.debug("After {}:\n{}".format(func, repr(pruned)))
+        try:
+            eval("%s(pruned)" % func)
+            logging.debug("After {}:\n{}".format(func, repr(pruned)))
+        except IndexError as e:
+            break
     return pruned
