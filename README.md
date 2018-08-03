@@ -18,7 +18,7 @@ __Def__ A series ![Series](https://latex.codecogs.com/gif.latex?S%3D%28S_0%2C%20
 |Occurences| 2 | 1 | 2 | 0 | 0 |
 
  - 2 occurences of 0
- - 1 occurence  of 1
+ - 1 occurence&nbsp;&nbsp;  of 1
  - 2 occurences of 2
  - 0 occurences of 3
  - 0 occurences of 4
