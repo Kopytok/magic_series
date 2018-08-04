@@ -63,7 +63,8 @@ series[4] = (series[4] == 4) + (series[1] == 4)     + (series[3] == 4) + (series
 
 To check if value `x` is equal to `v`, the following constraint is used:
 
-``` ((b == 1) & (x == v)) | ((b == 0) & (x != v))
+```
+((b == 1) & (x == v)) | ((b == 0) & (x != v))
 ```
 
 Which means, that we take all reified constraints and replace them with ternary constraints and new boolean variables `b`. That concept is realised in class `Domain`.
