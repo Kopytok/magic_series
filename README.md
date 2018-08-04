@@ -17,10 +17,46 @@ __Def__ A series ![Series](https://latex.codecogs.com/gif.latex?S%3D%28S_0%2C%20
 |---|---|---|---|---|---|
 |Occurences| 2 | 1 | 2 | 0 | 0 |
 
-Series [2, 1, 2, 0, 0] satisfies definition, because:
+Series [2, 1, 2, 0, 0] satisfies the definition, because:
 
  - 2 occurences of 0
  - 1 occurence&nbsp;&nbsp;  of 1
  - 2 occurences of 2
  - 0 occurences of 3
  - 0 occurences of 4
+
+## Concepts used
+
+**Reification**
+
+From definition: `series[k] == sum(series[i] == k)`.
+
+Let's expanded the formula for `length = 5`:
+
+```
+series[0] = (series[0] == 0) + (series[1] == 0) + (series[2] == 0) + (series[3] == 0) + (series[4] ==0)
+series[1] = (series[0] == 1) + (series[1] == 1) + (series[2] == 1) + (series[3] == 1) + (series[4] ==1)
+series[2] = (series[0] == 2) + (series[1] == 2) + (series[2] == 2) + (series[3] == 2) + (series[4] ==2)
+series[3] = (series[0] == 3) + (series[1] == 3) + (series[2] == 3) + (series[3] == 3) + (series[4] ==3)
+series[4] = (series[4] == 4) + (series[1] == 4) + (series[2] == 4) + (series[3] == 4) + (series[4] ==4)
+```
+
+What if `series[2] = 1`?
+
+```
+series[0] = (series[0] == 0) + (series[1] == 0) + 0 + (series[3] == 0) + (series[4] ==0)
+series[1] = (series[0] == 1) + (series[1] == 1) + 1 + (series[3] == 1) + (series[4] ==1)
+1         = (series[0] == 2) + (series[1] == 2) + 0 + (series[3] == 2) + (series[4] ==2)
+series[3] = (series[0] == 3) + (series[1] == 3) + 0 + (series[3] == 3) + (series[4] ==3)
+series[4] = (series[4] == 4) + (series[1] == 4) + 0 + (series[3] == 4) + (series[4] ==4)
+```
+
+But now `series[1] > 0`, that means, that the domain can be simplified:
+
+```
+series[0] = (series[0] == 0) +                      + (series[3] == 0) + (series[4] ==0)
+series[1] = (series[0] == 1) + (series[1] == 1) + 1 + (series[3] == 1) + (series[4] ==1)
+1         = (series[0] == 2) + (series[1] == 2)     + (series[3] == 2) + (series[4] ==2)
+series[3] = (series[0] == 3) + (series[1] == 3)     + (series[3] == 3) + (series[4] ==3)
+series[4] = (series[4] == 4) + (series[1] == 4)     + (series[3] == 4) + (series[4] ==4)
+```
