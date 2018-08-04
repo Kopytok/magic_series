@@ -10,7 +10,7 @@ def rowSum(lst):
     return sum(int(x) for x in lst if x > -1)
 
 def pruneSumEqLen(domain):
-    """ Check if sum of digits may equal to len of series """
+    """ Check if sum of digits may be equal to len of series """
     length = len(domain)
     out = domain.copy()
     for value, row in enumerate(out.grid):
@@ -33,7 +33,7 @@ def pruneSumEqLen(domain):
         logging.debug("Domain after row check:\n%s" % repr(domain))
 
 def pruneLastMissingNumber(domain):
-    """ Fill in last missing number """
+    """ Fill in the last missing number """
     numbers = domain.toDigits()
     if nanCnt(numbers) == 1:
         last_value = len(domain) - rowSum(numbers)
@@ -51,14 +51,15 @@ def pruneLessThanCurSum(domain):
                     domain.grid[value, position] = 0
 
 def pruneKnownRowSum(domain):
-    """ Fill row if corresponding value already solved """
+    """ Fill row if corresponding value is already solved """
     for position, value in enumerate(domain.toDigits()):
         if value > -1 and domain.rowSum(position) == value:
             domain.grid[position, :] = \
                 [x if x > -1 else 0 for x in domain.grid[position, :]]
 
 def pruneFillColumn(domain):
-    """ Fill column if only 1 item is missing or position already solved """
+    """ Fill column if only 1 item is missing or position is already
+        solved """
     temp = domain.copy()
     for position, col in enumerate(temp.grid.T):
         # Fill the last missing value within column

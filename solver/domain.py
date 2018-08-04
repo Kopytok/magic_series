@@ -39,10 +39,7 @@ class Domain(object):
             new_col = list()
             for index, it in enumerate(row):
                 if index == position:
-                    if i == number:
-                        new_col.append(1)
-                    else:
-                        new_col.append(0)
+                    new_col.append(int(i == number))
                 else:
                     new_col.append(it)
             new_grid.append(new_col)

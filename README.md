@@ -75,4 +75,10 @@ sum(series[k])     == length
 sum(series[k] * k) == length
 ```
 
-There are several other constraints used like fill in the last missing variable in column or decide the last missing number. All constraints are realized in `prune.py`
+ - Fill in the last missing value in column.
+ - Choose the last missing number in series.
+ - Fill missing values in row with `0`, if sum of the row is already equal to the number in postion.
+ - Choose number, if corresponding row is already known.
+ - Fill with `0` values, which are less than the current sum of the row. For example, if there's already two `1`s, that means, that value in position is >= 2.
+
+All constraints are realized in `prune.py`
