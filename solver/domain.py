@@ -9,7 +9,7 @@ MISSING_CHAR = b'\xc2\xb7'.decode('utf8')
 
 class Domain(object):
     def __init__(self, length):
-        self.grid = np.array([[-1] * length] * length)
+        self.grid = -np.ones((length, length))
 
     def __repr__(self):
         rows = list()
