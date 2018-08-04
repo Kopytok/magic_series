@@ -27,7 +27,7 @@ Series [2, 1, 2, 0, 0] satisfies the definition, because:
 
 ## Concepts used
 
-**Reification**
+### Reification
 
 From definition: `series[k] == sum(series[i] == k)`.
 
@@ -68,3 +68,12 @@ To check if value `x` is equal to `v`, the following constraint is used:
 ```
 
 Which means, that we take all reified constraints and replace them with ternary constraints and new boolean variables `b`. That concept is realised in class `Domain`.
+
+### Constraints
+
+```
+sum(series[k])     == length
+sum(series[k] * k) == length
+```
+
+There are several other constraints used like fill in the last missing variable in column or decide the last missing number. All constraints are realized in `prune.py`
