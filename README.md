@@ -31,32 +31,39 @@ Series [2, 1, 2, 0, 0] satisfies the definition, because:
 
 From definition: `series[k] == sum(series[i] == k)`.
 
-Let's expanded the formula for `length = 5`:
+Let's expand the formula for `length = 5`:
 
 ```
-series[0] = (series[0] == 0) + (series[1] == 0) + (series[2] == 0) + (series[3] == 0) + (series[4] ==0)
-series[1] = (series[0] == 1) + (series[1] == 1) + (series[2] == 1) + (series[3] == 1) + (series[4] ==1)
-series[2] = (series[0] == 2) + (series[1] == 2) + (series[2] == 2) + (series[3] == 2) + (series[4] ==2)
-series[3] = (series[0] == 3) + (series[1] == 3) + (series[2] == 3) + (series[3] == 3) + (series[4] ==3)
-series[4] = (series[4] == 4) + (series[1] == 4) + (series[2] == 4) + (series[3] == 4) + (series[4] ==4)
+series[0] = (series[0] == 0) + (series[1] == 0) + (series[2] == 0) + (series[3] == 0) + (series[4] == 0)
+series[1] = (series[0] == 1) + (series[1] == 1) + (series[2] == 1) + (series[3] == 1) + (series[4] == 1)
+series[2] = (series[0] == 2) + (series[1] == 2) + (series[2] == 2) + (series[3] == 2) + (series[4] == 2)
+series[3] = (series[0] == 3) + (series[1] == 3) + (series[2] == 3) + (series[3] == 3) + (series[4] == 3)
+series[4] = (series[4] == 4) + (series[1] == 4) + (series[2] == 4) + (series[3] == 4) + (series[4] == 4)
 ```
 
 What if `series[2] = 1`?
 
 ```
-series[0] = (series[0] == 0) + (series[1] == 0) + 0 + (series[3] == 0) + (series[4] ==0)
-series[1] = (series[0] == 1) + (series[1] == 1) + 1 + (series[3] == 1) + (series[4] ==1)
-1         = (series[0] == 2) + (series[1] == 2) + 0 + (series[3] == 2) + (series[4] ==2)
-series[3] = (series[0] == 3) + (series[1] == 3) + 0 + (series[3] == 3) + (series[4] ==3)
-series[4] = (series[4] == 4) + (series[1] == 4) + 0 + (series[3] == 4) + (series[4] ==4)
+series[0] = (series[0] == 0) + (series[1] == 0) + 0 + (series[3] == 0) + (series[4] == 0)
+series[1] = (series[0] == 1) + (series[1] == 1) + 1 + (series[3] == 1) + (series[4] == 1)
+1         = (series[0] == 2) + (series[1] == 2) + 0 + (series[3] == 2) + (series[4] == 2)
+series[3] = (series[0] == 3) + (series[1] == 3) + 0 + (series[3] == 3) + (series[4] == 3)
+series[4] = (series[4] == 4) + (series[1] == 4) + 0 + (series[3] == 4) + (series[4] == 4)
 ```
 
 But now `series[1] > 0`, that means, that the domain can be simplified:
 
 ```
-series[0] = (series[0] == 0) +                      + (series[3] == 0) + (series[4] ==0)
-series[1] = (series[0] == 1) + (series[1] == 1) + 1 + (series[3] == 1) + (series[4] ==1)
-1         = (series[0] == 2) + (series[1] == 2)     + (series[3] == 2) + (series[4] ==2)
-series[3] = (series[0] == 3) + (series[1] == 3)     + (series[3] == 3) + (series[4] ==3)
-series[4] = (series[4] == 4) + (series[1] == 4)     + (series[3] == 4) + (series[4] ==4)
+series[0] = (series[0] == 0) +                      + (series[3] == 0) + (series[4] == 0)
+series[1] = (series[0] == 1) + (series[1] == 1) + 1 + (series[3] == 1) + (series[4] == 1)
+1         = (series[0] == 2) + (series[1] == 2)     + (series[3] == 2) + (series[4] == 2)
+series[3] = (series[0] == 3) + (series[1] == 3)     + (series[3] == 3) + (series[4] == 3)
+series[4] = (series[4] == 4) + (series[1] == 4)     + (series[3] == 4) + (series[4] == 4)
 ```
+
+To check if value `x` is equal to `v`, the following constraint is used:
+
+``` ((b == 1) & (x == v)) | ((b == 0) & (x != v))
+```
+
+Which means, that we take all reified constraints and replace them with ternary constraints and new boolean variables `b`. That concept is realised in class `Domain`.
