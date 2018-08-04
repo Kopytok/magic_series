@@ -11,7 +11,9 @@ __Def__ A series ![Series](https://latex.codecogs.com/gif.latex?S%3D%28S_0%2C%20
 |---|---|---|---|---|---|
 |Occurences| ? | ? | ? | ? | ? |
 
-**Ex**:|   | 0 | 1 | 2 | 3 | 4 |
+**Ex**:
+
+|   | 0 | 1 | 2 | 3 | 4 |
 |---|---|---|---|---|---|
 |Occurences| 2 | 1 | 2 | 0 | 0 |
 
