@@ -74,7 +74,8 @@ class Domain(object):
                 eval_numbers.append(value)
             else:
                 missing = np.where(col == -1)[0]
-                logging.debug("Eval. n: {}\tcol: {}\tmissing: {}".format(n, col, missing))
+                logging.debug("Eval. n: {}\tcol: {}\tmissing: {}"
+                              .format(n, col, missing))
                 eval_numbers.append(missing[{'min': 0, 'max': -1}[how]])
         return eval_numbers
 
