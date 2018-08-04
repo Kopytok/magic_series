@@ -92,3 +92,6 @@ def prune(domain):
         except IndexError as e:
             break
     return pruned
+
+if __name__ == "__main__":
+    pass
