@@ -14,7 +14,7 @@ class Domain(object):
     def __repr__(self):
         rows = list()
         for row in self.grid:
-            rows.append("".join(str(it) if it > -1 else MISSING_CHAR
+            rows.append("".join(str(int(it)) if it > -1 else MISSING_CHAR
                         for it in row))
         return "\n".join(rows)
 
