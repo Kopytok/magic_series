@@ -3,6 +3,7 @@ import time
 import logging
 
 import numpy as np
+import pandas as pd
 
 from solver.domain import MISSING_CHAR, Domain
 
@@ -16,18 +17,31 @@ logging.basicConfig(level=logging.INFO,
         logging.StreamHandler(),
     ])
 
+def save_perfomance(length, seconds, commit_id=""):
+    import datetime
+
+    perfomance_path = "perfomance.csv"
+    try:
+        perfomance = pd.read_csv(perfomance_path)
+    except FileNotFoundError as e:
+        perfomance = pd.DataFrame(
+            columns=["history_dt", "commit_id",  "length", "execution_tm"])
+    now = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    perfomance = perfomance.append([{
+        "history_dt":   now,
+        "commit_id":    commit_id,
+        "length":       length,
+        "execution_tm": seconds,
+    }])
+    perfomance.to_csv(perfomance_path, index=False)
+    return
+
 def search(domain):
     temp = domain.copy()
-
     # Feasibility testing & pruning
     logging.debug("Before pruning:\n{}".format(repr(temp)))
-    while temp.feasibilityCheck():
-        tmp = temp.prune()
-        if np.array_equal(temp.grid, tmp.grid):
-            break
-        else:
-            temp = tmp.copy()
-    if not temp.feasibilityCheck():
+    temp = temp.prune()
+    if not temp.feasibility_test():
         return False
     if MISSING_CHAR not in str(temp):
         return set([str(temp)])
@@ -52,7 +66,7 @@ def solve(domain):
     else:
         logging.info("No magic series of length %d" % len(domain))
     logging.info("Solved in %02d:%02d\n" % divmod(time.time() - t0, 60))
-    return answer
+    return answer, time.time() - t0
 
 def main():
     while True:
@@ -64,8 +78,21 @@ def main():
             print("Wrong input. Write positive integer")
             continue
 
-    d = Domain(length)
-    return solve(d)
+    domain = Domain(length)
+    answer, execution_time = solve(domain)
+    save_perfomance(length, execution_time)
+    return answer
+
+def test():
+    git_commit = int(input("Input git commit id: "))
+    for length in range(4, 10):
+        logging.info("Started length %d" % length)
+        for i in range(3):
+            logging.info("Run #%d" % i)
+            domain = Domain(length)
+            _, execution_time = solve(domain)
+            save_perfomance(length, execution_time, commit_id)
 
 if __name__ == "__main__":
-    main()
+    # main()
+    test()
