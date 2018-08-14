@@ -86,7 +86,7 @@ def prune_sum_ready(domain):
     """ Decide number at position if already filled corresponding row """
     prune_flg = False
     for value, row in enumerate(domain.grid):
-        if -1 in domain[value] and -1 not in row:
+        if -1 not in row and -1 in domain[value]:
             prune_flg = True
             domain[value] = int(sum(row))
     return prune_flg

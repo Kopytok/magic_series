@@ -84,14 +84,14 @@ def main():
     return answer
 
 def test():
-    git_commit = int(input("Input git commit id: "))
+    git_commit = input("Input git commit id: ")
     for length in range(4, 10):
         logging.info("Started length %d" % length)
-        for i in range(3):
+        for i in range(1):
             logging.info("Run #%d" % i)
             domain = Domain(length)
             _, execution_time = solve(domain)
-            save_perfomance(length, execution_time, commit_id)
+            save_perfomance(length, execution_time, git_commit)
 
 if __name__ == "__main__":
     # main()
