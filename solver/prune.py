@@ -12,21 +12,20 @@ def row_sum(lst):
 def prune_sum_eq_len(domain):
     """ Check if sum of digits may be equal to len of series """
     prune_flg = False
-    length = len(domain)
     out = domain.copy()
     for value, row in enumerate(out.grid):
         logging.debug("Value: {}\tRow: {}".format(value, row))
         for position, it in enumerate(row):
             logging.debug("Position: {}\tIt: {}".format(position, int(it)))
             if it == -1:
-                min_eval = out.eval(value, position, how='min')
-                max_eval = out.eval(value, position, how='max')
+                min_eval = out.eval(value, position, how="min")
+                max_eval = out.eval(value, position, how="max")
 
                 constraints = [
-                    sum(min_eval) > length,
-                    sum(max_eval) < length,
-                    sum([t * n for t, n in enumerate(min_eval)]) > length,
-                    sum([t * n for t, n in enumerate(max_eval)]) < length,
+                    sum(min_eval) > domain.length,
+                    sum(max_eval) < domain.length,
+                    sum([t * n for t, n in enumerate(min_eval)]) > domain.length,
+                    sum([t * n for t, n in enumerate(max_eval)]) < domain.length,
                 ]
 
                 if reduce(lambda x, y: x | y, constraints):

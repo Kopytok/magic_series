@@ -10,6 +10,7 @@ MISSING_CHAR = b'\xc2\xb7'.decode('utf8')
 class Domain(object):
     def __init__(self, length):
         self.grid = -np.ones((length, length))
+        self.length = length
 
     def __repr__(self):
         return "\n".join(["".join(str(int(it)) if it > -1 else MISSING_CHAR
