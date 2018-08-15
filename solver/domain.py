@@ -14,7 +14,7 @@ class Domain(object):
 
     def __repr__(self):
         return "\n".join(["".join(str(int(it)) if it > -1 else MISSING_CHAR
-                         for it in row) for row in self.grid])
+                          for it in row) for row in self.grid])
 
     def __str__(self):
         return "".join([str(np.where(col == 1)[0][0]) if sum(col == 1)
@@ -67,13 +67,8 @@ class Domain(object):
 
     def to_digits(self):
         """ Convert domain into digits """
-        digits = list()
-        for col in self.grid.T:
-            if sum(col) == 1:
-                digits.append(np.where(col == 1)[0][0])
-            else:
-                digits.append(-1)
-        return digits
+        return [np.where(col == 1)[0][0] if sum(col) == 1 else -1
+                for col in self.grid.T]
 
     def row_sum(self, row):
         """ Sum of elements in row `row` """

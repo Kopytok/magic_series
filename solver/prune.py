@@ -105,8 +105,6 @@ def prune(domain):
             try:
                 prune_flg = eval("%s(domain)" % func)
                 changed_flg = changed_flg or prune_flg
-                # print(prune_flg)
-                # print(repr(domain))
                 logging.debug("Changed after {} {}:\n{}".format(
                     func, prune_flg, repr(domain)))
             except IndexError as e:
