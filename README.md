@@ -81,4 +81,4 @@ sum(series[k] * k) == length
  - Choose number, if corresponding row is already known.
  - Fill with `0` values, which are less than the current sum of the row. For example, if there's already two `1`s, that means, that value in position is >= 2.
 
-All constraints are realized in `prune.py`
+All constraints are implemented in `prune.py`
