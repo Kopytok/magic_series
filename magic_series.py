@@ -25,11 +25,10 @@ def save_perfomance(length, seconds, commit_id=""):
         perfomance = pd.read_csv(perfomance_path)
     except FileNotFoundError as e:
         perfomance = pd.DataFrame(
-            columns=["history_dt", "commit_id",  "length", "execution_tm"])
+            columns=["history_dt",  "length", "execution_tm"])
     now = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     perfomance = perfomance.append([{
         "history_dt":   now,
-        "commit_id":    commit_id,
         "length":       length,
         "execution_tm": seconds,
     }])
@@ -40,12 +39,13 @@ def search(domain):
     temp = domain.copy()
     # Feasibility testing & pruning
     logging.debug("Before pruning:\n{}".format(repr(temp)))
-    temp = temp.prune()
-    if not temp.feasibility_test():
+    feasible = temp.prune()
+    if not feasible:
+        logging.debug("Not feasible")
         return False
+    logging.debug("After pruning:\n{}".format(repr(temp)))
     if MISSING_CHAR not in str(temp):
         return set([str(temp)])
-    logging.debug("After pruning:\n{}".format(repr(temp)))
 
     # Making a guess
     answers = set()
@@ -84,14 +84,13 @@ def main():
     return answer
 
 def test():
-    git_commit = input("Input git commit id: ")
-    for length in range(4, 10):
+    for length in range(3,11):
         logging.info("Started length %d" % length)
         for i in range(1):
             logging.info("Run #%d" % i)
             domain = Domain(length)
             _, execution_time = solve(domain)
-            save_perfomance(length, execution_time, git_commit)
+            save_perfomance(length, execution_time)
 
 if __name__ == "__main__":
     # main()

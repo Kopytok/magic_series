@@ -84,10 +84,10 @@ class Domain(object):
         for value, position in product(rng, rng):
             it = self.grid[value, position]
             if it > -1:
-                row_sum_1 = self.row_sum(position)
-                nan_cnt_1 = self.nan_cnt(position)
+                rowSum = self.row_sum(position)
+                nanCnt = self.nan_cnt(position)
                 try:
-                    available = range(row_sum_1, row_sum_1 + nan_cnt_1 + 1)
+                    available = range(rowSum, rowSum + nanCnt + 1)
                     left_values = [x for x in available if x != value]
                     assert (it == 1 and value in list(available)) or \
                            (it == 0 and len(left_values))

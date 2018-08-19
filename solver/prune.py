@@ -91,6 +91,7 @@ def prune_sum_ready(domain):
     return prune_flg
 
 def prune(domain):
+    """ Return True if feasible, False otherwise """
     while domain.feasibility_test():
         constraints = [
             "prune_sum_eq_len",
@@ -110,8 +111,8 @@ def prune(domain):
             except IndexError as e:
                 break
         if not changed_flg:
-            break
-    return domain
+            return True
+    return False
 
 if __name__ == "__main__":
     pass
