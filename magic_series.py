@@ -93,5 +93,5 @@ def test():
             save_perfomance(length, execution_time)
 
 if __name__ == "__main__":
-    # main()
-    test()
+    main()
+    # test()
