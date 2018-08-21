@@ -44,7 +44,6 @@ class Domain(object):
     def eval(self, value, position, how='min'):
         """ Evaluate max or min possible solution
             if `value` placed in `position` """
-        logging.debug("Eval. Current solution %s" % str(self))
         eval_numbers = list()
         for n, col in enumerate(self.grid.T):
             if 1 in col and n != position:
@@ -53,8 +52,6 @@ class Domain(object):
                 eval_numbers.append(value)
             else:
                 missing = np.where(col == -1)[0]
-                logging.debug("Eval. n: {}\tcol: {}\tmissing: {}"
-                              .format(n, col, missing))
                 eval_numbers.append(missing[{'min': 0, 'max': -1}[how]])
         return eval_numbers
 

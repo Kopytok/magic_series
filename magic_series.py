@@ -84,7 +84,7 @@ def main():
     return answer
 
 def test():
-    for length in range(3,20):
+    for length in range(3,50):
         logging.info("Started length %d" % length)
         for i in range(1):
             logging.info("Run #%d" % i)
@@ -93,5 +93,5 @@ def test():
             save_perfomance(length, execution_time)
 
 if __name__ == "__main__":
-    main()
-    # test()
+    # main()
+    test()

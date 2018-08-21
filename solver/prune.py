@@ -16,7 +16,6 @@ def prune_sum_eq_len(domain):
     for value, row in enumerate(out.grid):
         logging.debug("Value: {}\tRow: {}".format(value, row))
         for position, it in enumerate(row):
-            logging.debug("Position: {}\tIt: {}".format(position, int(it)))
             if it == -1:
                 min_eval = out.eval(value, position, how="min")
                 max_eval = out.eval(value, position, how="max")
@@ -101,16 +100,20 @@ def prune(domain):
             "prune_known_row_sum",
             "prune_sum_ready",
         ]
-        changed_flg = False # Track changes
-        for func in constraints:
-            try:
-                prune_flg = eval("%s(domain)" % func)
-                changed_flg = changed_flg or prune_flg
-                logging.debug("Changed after {} {}:\n{}".format(
-                    func, prune_flg, repr(domain)))
-            except IndexError as e:
-                break
-        if not changed_flg:
+        change_flg = True
+        while change_flg:
+            change_flg = False
+            for func in constraints:
+                try:
+                    prune_flg = True
+                    while prune_flg:
+                        prune_flg = eval("%s(domain)" % func)
+                        change_flg = change_flg or prune_flg
+                        logging.debug("Changed after {} {}:\n{}"\
+                            .format(func, prune_flg, repr(domain)))
+                except IndexError as e:
+                    break
+        if domain.feasibility_test():
             return True
     return False
 
