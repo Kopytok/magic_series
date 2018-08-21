@@ -94,9 +94,9 @@ def prune(domain):
     """ Return True if feasible, False otherwise """
     while domain.feasibility_test():
         constraints = [
+            "prune_less_than_possible",
             "prune_sum_eq_len",
             "prune_last_missing_number",
-            "prune_less_than_possible",
             "prune_fill_column",
             "prune_known_row_sum",
             "prune_sum_ready",

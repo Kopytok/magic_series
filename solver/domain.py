@@ -41,17 +41,6 @@ class Domain(object):
         for value in empty_positions:
             yield value, position
 
-        # nan_per_col = dict()
-        # for position, col in enumerate(self.grid.T):
-        #     if sum(col) < 1:
-        #         nan_per_col[position] = nan_cnt(col)
-        #
-        # position = min(nan_per_col, key=nan_per_col.get)
-        # iter_col = self.grid.T[position]
-        # empty_positions = np.where(iter_col == -1)[0][::-1]
-        # for value in empty_positions:
-        #     yield value, position
-
     def eval(self, value, position, how='min'):
         """ Evaluate max or min possible solution
             if `value` placed in `position` """
