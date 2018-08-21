@@ -10,6 +10,7 @@ MISSING_CHAR = b'\xc2\xb7'.decode('utf8')
 class Domain(object):
     def __init__(self, length):
         self.grid = -np.ones((length, length))
+        self.grid[0, 0] = 0
         self.length = length
 
     def __repr__(self):
@@ -32,15 +33,17 @@ class Domain(object):
         return self.grid.shape[0]
 
     def __iter__(self):
+
         nan_per_col = dict()
         for position, col in enumerate(self.grid.T):
             if sum(col) < 1:
                 nan_per_col[position] = nan_cnt(col)
 
-        for position in sorted(nan_per_col, key=nan_per_col.get):
-            empty_value = np.where(self.grid[:, position] == -1)[0][::-1]
-            for value in empty_value:
-                yield value, position
+        position = min(nan_per_col, key=nan_per_col.get)
+        iter_col = self.grid.T[position]
+        empty_positions = np.where(iter_col == -1)[0][::-1]
+        for value in empty_positions:
+            yield value, position
 
     def eval(self, value, position, how='min'):
         """ Evaluate max or min possible solution

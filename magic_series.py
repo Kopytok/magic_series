@@ -36,22 +36,22 @@ def save_perfomance(length, seconds, commit_id=""):
     return
 
 def search(domain):
-    temp = domain.copy()
+    temp_domain = domain.copy()
     # Feasibility testing & pruning
-    logging.debug("Before pruning:\n{}".format(repr(temp)))
-    feasible = temp.prune()
+    logging.debug("Before pruning:\n{}".format(repr(temp_domain)))
+    feasible = temp_domain.prune()
     if not feasible:
         logging.debug("Not feasible")
         return False
-    logging.debug("After pruning:\n{}".format(repr(temp)))
-    if MISSING_CHAR not in str(temp):
-        return set([str(temp)])
+    logging.debug("After pruning:\n{}".format(repr(temp_domain)))
+    if MISSING_CHAR not in str(temp_domain):
+        return set([str(temp_domain)])
 
     # Making a guess
     answers = set()
-    for value, position in temp:
+    for value, position in temp_domain:
         logging.debug("Try value {} in position {}".format(value, position))
-        temp_sum = temp.copy()
+        temp_sum = temp_domain.copy()
         temp_sum[position] = value
         out = search(temp_sum)
         if isinstance(out, set):
@@ -84,7 +84,7 @@ def main():
     return answer
 
 def test():
-    for length in range(3,11):
+    for length in range(3,20):
         logging.info("Started length %d" % length)
         for i in range(1):
             logging.info("Run #%d" % i)
