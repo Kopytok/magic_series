@@ -42,7 +42,7 @@ def search(domain):
     feasible = temp_domain.prune()
     if not feasible:
         logging.debug("Not feasible")
-        return False
+        return None
     logging.debug("After pruning:\n{}".format(repr(temp_domain)))
     if MISSING_CHAR not in str(temp_domain):
         return set([str(temp_domain)])
@@ -53,9 +53,9 @@ def search(domain):
         logging.debug("Try value {} in position {}".format(value, position))
         temp_sum = temp_domain.copy()
         temp_sum[position] = value
-        out = search(temp_sum)
-        if isinstance(out, set):
-            answers |= out
+        result = search(temp_sum)
+        if result:
+            answers |= result
     return answers
 
 def solve(domain):
