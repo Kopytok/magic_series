@@ -112,7 +112,7 @@ def prune(domain):
                         logging.debug("Changed after {} {}:\n{}"\
                             .format(func, prune_flg, repr(domain)))
                 except IndexError as e:
-                    break
+                    return False
         if domain.feasibility_test():
             return True
     return False

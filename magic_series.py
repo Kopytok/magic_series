@@ -1,6 +1,7 @@
 import os
 import time
 import logging
+import datetime
 
 import numpy as np
 import pandas as pd
@@ -18,8 +19,6 @@ logging.basicConfig(level=logging.INFO,
     ])
 
 def save_perfomance(length, seconds, commit_id=""):
-    import datetime
-
     perfomance_path = "perfomance.csv"
     try:
         perfomance = pd.read_csv(perfomance_path)
@@ -37,7 +36,7 @@ def save_perfomance(length, seconds, commit_id=""):
 
 def search(domain):
     temp_domain = domain.copy()
-    # Feasibility testing & pruning
+    # Feasibility test & pruning
     logging.debug("Before pruning:\n{}".format(repr(temp_domain)))
     feasible = temp_domain.prune()
     if not feasible:
@@ -47,7 +46,7 @@ def search(domain):
     if MISSING_CHAR not in str(temp_domain):
         return set([str(temp_domain)])
 
-    # Making a guess
+    # Make a guess
     answers = set()
     for value, position in temp_domain:
         logging.debug("Try value {} in position {}".format(value, position))
@@ -93,5 +92,5 @@ def test():
             save_perfomance(length, execution_time)
 
 if __name__ == "__main__":
-    main()
-    # test()
+    # main()
+    test()
