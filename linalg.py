@@ -5,6 +5,8 @@ import time
 
 import numpy as np
 
+from linalg_prune import prune
+
 logging_path = os.path.join(os.getcwd(), "text_log.log")
 
 logging.basicConfig(level=logging.INFO,
@@ -57,22 +59,24 @@ class Domain(object):
         """ Convert 2-D domain into 1-D array """
         return np.dot(self.numbers, self.grid)
 
+    def prune(self): # TODO
+        """ Prune unfeasible values from domain """
+        return prune(self)
+
     def search(self):
         """ Walk through domain and try each available item """
         results = set()
         temp_domain = copy.deepcopy(self)
         for value, position in self:
             temp_domain[position] = value
-
-            # PRUNE
-
-            feasibility = temp_domain.feasibility_test().all()
-
-            temp_numbers = temp_domain.to_numbers()
+            feasibile = temp_domain.prune()
+            if not feasibile:
+                return set()
 
             # If no missing values, test and save
-            if not np.isnan(temp_numbers).any() and \
-                    np.logical_and(temp_domain.magic_series(), feasibility):
+            if not np.isnan(temp_domain.to_numbers()).any() and \
+                    feasibile and \
+                    temp_domain.magic_series():
                 results.add(repr(temp_domain))
 
             # Save all previous results
