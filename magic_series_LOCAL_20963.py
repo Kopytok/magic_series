@@ -14,11 +14,7 @@ logging.basicConfig(level=logging.INFO,
     format="%(levelname)s - %(asctime)s - %(msg)s",
     datefmt="%Y-%m-%d %H:%M:%S",
     handlers=[
-<<<<<<< HEAD
         # logging.FileHandler(logging_path), # For debug
-=======
-        logging.FileHandler(logging_path), # For debug
->>>>>>> linalg
         logging.StreamHandler(),
     ])
 
@@ -67,11 +63,7 @@ def solve(domain):
     if answer:
         logging.info("Length {}: {}".format(len(domain), answer))
     else:
-<<<<<<< HEAD
         logging.info("No magic series of length %d" % len(domain))
-=======
-        logging.info("No magic series found for length %d" % len(domain))
->>>>>>> linalg
     logging.info("Solved in %02d:%02d\n" % divmod(time.time() - t0, 60))
     return answer, time.time() - t0
 
@@ -91,7 +83,6 @@ def main():
     return answer
 
 def test():
-<<<<<<< HEAD
     for length in range(3,50):
         logging.info("Started length %d" % length)
         for i in range(1):
@@ -99,13 +90,6 @@ def test():
             domain = Domain(length)
             _, execution_time = solve(domain)
             save_perfomance(length, execution_time)
-=======
-    for length in range(3,30):
-        logging.info("Length %d" % length)
-        domain = Domain(length)
-        _, execution_time = solve(domain)
-        save_perfomance(length, execution_time)
->>>>>>> linalg
 
 if __name__ == "__main__":
     # main()
