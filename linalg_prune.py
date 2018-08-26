@@ -19,12 +19,22 @@ def prune_fill_last_col(domain):
     domain.grid = np.where(pad, pad, domain.grid)
     return pad.any()
 
+def prune_fill_last_number(domain):
+    """ Fill last missing number """
+    if np.isnan(domain.to_numbers()).sum() == 1:
+        position = np.nanmax(np.where(np.isnan(domain.to_numbers()),
+                                               domain.numbers, np.nan))
+        domain.grid[:, position] = np.isnan(domain.grid[:position])
+        return True
+    return False
+
 def prune(domain):
     """ Prune using listed functions """
     logging.debug("Input domain:\n%s" % str(domain))
     constraints = [
         prune_sum_eq_len,
         prune_fill_last_col,
+        prune_fill_last_number,
     ]
     changed = feasible = True
     while changed and feasible:
