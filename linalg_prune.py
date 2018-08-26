@@ -4,12 +4,14 @@ import logging
 import numpy as np
 
 def prune_sum_eq_len(domain):
-    # Add estimate (position * value)
+    """ Prune if sum(val) or sum(pos * val) can't equal length """
+    min_sum, max_sum = domain.estimate("sum")
+    min_mult, max_mult = domain.estimate("mult")
     constraints = [
-        domain.estimate("min", "sum") > domain.length,
-        domain.estimate("max", "sum") < domain.length,
-        domain.estimate("min", "mult") > domain.length,
-        domain.estimate("max", "mult") < domain.length,
+        min_sum > domain.length,
+        max_sum < domain.length,
+        min_mult > domain.length,
+        max_mult < domain.length,
     ]
     pad = reduce(lambda x, y: x | y, constraints)
     pad = pad & np.isnan(domain.grid)
@@ -66,20 +68,24 @@ def prune(domain):
     changed = feasible = True
     while changed and feasible:
         changed = False
-        not_changed_cnt = 0
+        not_changed_cnt = 0 # Exit if doesn't prune
         for func in constraints:
             not_changed_cnt += 1
-            logging.debug("Domain before {}:\n{}".format(func.__name__, str(domain)))
+            logging.debug(
+                "Domain before {}:\n{}".format(func.__name__, str(domain)))
+
             pruned = func(domain)
             if pruned:
                 not_changed_cnt = 0
             changed = changed or pruned
-            logging.debug("Domain after {}:\n{}".format(func.__name__, str(domain)))
+            logging.debug(
+                "Domain after {}:\n{}".format(func.__name__, str(domain)))
+
             feasible = domain.feasibility_test().all()
-            too_long = not_changed_cnt > len(constraints)
+            too_long_pruning = not_changed_cnt > len(constraints)
             filled = np.isnan(domain.grid).sum() == 0
             logging.debug("Filled:\n{}".format(filled))
-            if too_long or filled or not feasible:
+            if too_long_pruning or filled or not feasible:
                 changed = False
                 break
         logging.debug("Feasible: {}".format(feasible))

@@ -4,6 +4,7 @@ import logging
 import time
 
 import numpy as np
+np.seterr(divide='ignore', invalid='ignore')
 
 from linalg_prune import prune
 
@@ -20,17 +21,23 @@ logging.basicConfig(level=logging.INFO,
 def magic_series(grid):
     """ Check if grid satisfies the definition
         series[k] == sum(series[i] == k) """
+    logging.debug("Grid:\n{}".format(grid))
+    logging.debug("Magic check:\n{}".format(grid.sum(1) == np.where(grid.T)[1]))
     return (grid.sum(1) == np.where(grid.T)[1]).all()
 
 
 class Domain(object):
 
     def __init__(self, length):
+        from linalg_prune import prune_sum_eq_len
+
         self.length = length
         self.numbers = np.linspace(0, length-1, length)
         self.grid = np.empty((length, length))
         self.grid[:] = np.nan
         self.grid[0,0] = False
+        prune_sum_eq_len(self)
+
 
     def __str__(self):
         return str(self.grid)
@@ -73,7 +80,7 @@ class Domain(object):
         values = mask * self.numbers.reshape((-1, 1))
         return np.where(mask, values, np.nan)
 
-    def estimate(self, f="min", how="sum"):
+    def estimate(self, how="sum"):
         """ Estimate min or max (position), if `sum`,
             (index * position), if `mult`
             for each missing position """
@@ -90,9 +97,13 @@ class Domain(object):
         clean_bound = np.nan_to_num(missing_values) - \
             np.nan_to_num(num) + np.nansum(num)
         clean_bound = np.where(mask, clean_bound, np.nan)
-        est = eval("np.nan%s" % f)(missing_values, 0)
-        all_sum = np.nansum(est)
-        return clean_bound + all_sum - est
+
+        out = list()
+        for f in "min", "max":
+            est = eval("np.nan%s" % f)(missing_values, 0)
+            all_sum = np.nansum(est)
+            out.append(clean_bound + all_sum - est)
+        return out
 
     def prune(self):
         """ Prune unfeasible values from domain """
@@ -128,11 +139,13 @@ class Domain(object):
     def feasibility_test(self):
         """ Test domain feasibility
             ((b == 1) & (x == v)) | ((b == 0) & (x != v)) """
-        values, positions = np.mgrid[:self.length, :self.length]
+        values = np.repeat(
+            np.linspace(0, self.length-1, self.length).reshape((-1,1)),
+            self.length, axis=1)
         feasibility = \
             np.logical_or(
-                np.isnan(self.grid),
-                np.equal(
+                np.isnan(self.grid), # missing
+                np.equal( # or feasible
                     self.grid,
                     np.equal(
                         values,
