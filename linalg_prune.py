@@ -42,22 +42,12 @@ def prune_less_than_possible(domain):
 
 def prune_row_ready(domain):
     """ Decide number at position if already filled corresponding row """
-    logging.debug("numbers:\n{}".format(domain.to_numbers()))
-    logging.debug("isnan(domain.to_numbers()):\n{}".format(np.isnan(domain.to_numbers())))
-    logging.debug("np.isnan(domain.grid).sum(1) == 0:\n{}".format(np.isnan(domain.grid).sum(1) == 0))
-
     ready_rows = np.where(
         np.isnan(domain.to_numbers()),
         np.isnan(domain.grid).sum(1) == 0,
         0)
-    logging.debug("ready_rows:\n{}".format(ready_rows))
-
     row_sum = np.nansum(domain.grid, 1)
-    logging.debug("row_sum:\n{}".format(row_sum))
-
     filler = np.where(ready_rows, row_sum, np.nan)
-    logging.debug("filler:\n{}".format(filler))
-
     for position, value in enumerate(filler):
         if ~np.isnan(value):
             domain[position] = value
