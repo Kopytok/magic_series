@@ -22,19 +22,43 @@ def prune_fill_last_col(domain):
 def prune_fill_last_number(domain):
     """ Fill last missing number """
     if np.isnan(domain.to_numbers()).sum() == 1:
-        position = np.nanmax(np.where(np.isnan(domain.to_numbers()),
-                                               domain.numbers, np.nan))
+        position = np.nanmax(np.where(
+            np.isnan(domain.to_numbers()),
+            domain.numbers, # index
+            np.nan))
         domain.grid[:, position] = np.isnan(domain.grid[:position])
         return True
+    return False
+
+def prune_less_than_possible(domain):
+    """ Fill with 0 values less than current number of occurences """
+    row_sum = np.nansum(domain.grid, 1)
+    pad = domain.missing_values() < row_sum
+    domain.grid = np.where(pad, ~pad, domain.grid)
+    return pad.any()
+
+def prune_row_ready(domain):
+    """ Decide number at position if already filled corresponding row """
+    ready_rows = np.where(
+        np.isnan(domain.to_numbers()),
+        np.isnan(domain.grid).sum(1) == 0,
+        np.nan)
+    row_sum = np.nansum(domain.grid, 1)
+    filler = np.where(ready_rows, row_sum, np.nan)
+    for position, value in enumerate(filler):
+        if ~np.isnan(value):
+            domain[position] = value
     return False
 
 def prune(domain):
     """ Prune using listed functions """
     logging.debug("Input domain:\n%s" % str(domain))
     constraints = [
+        prune_less_than_possible,
         prune_sum_eq_len,
         prune_fill_last_col,
         prune_fill_last_number,
+        prune_row_ready,
     ]
     changed = feasible = True
     while changed and feasible:
