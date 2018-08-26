@@ -10,7 +10,7 @@ from solver.domain import MISSING_CHAR, Domain
 
 logging_path = os.path.join(os.getcwd(), "text_log.log")
 
-logging.basicConfig(level=logging.DEBUG,
+logging.basicConfig(level=logging.INFO,
     format="%(levelname)s - %(asctime)s - %(msg)s",
     datefmt="%Y-%m-%d %H:%M:%S",
     handlers=[
@@ -83,12 +83,12 @@ def main():
     return answer
 
 def test():
-    for length in range(3,50):
+    for length in range(3,30):
         logging.info("Length %d" % length)
         domain = Domain(length)
         _, execution_time = solve(domain)
         save_perfomance(length, execution_time)
 
 if __name__ == "__main__":
-    main()
-    # test()
+    # main()
+    test()
