@@ -1,4 +1,5 @@
 def prune_sum_eq_len(domain):
+    # domain.to_numbers()
     return False
 
 def prune(domain):
@@ -6,7 +7,8 @@ def prune(domain):
     constraints = [
         prune_sum_eq_len,
     ]
-    changed = True
-    while changed:
+    changed = feasible = True
+    while changed and feasible:
         changed = any([func(domain) for func in constraints])
-    return domain.feasibility_test().all()
+        feasible = domain.feasibility_test().all()
+    return feasible

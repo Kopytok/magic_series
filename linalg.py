@@ -22,6 +22,7 @@ def magic_series(grid):
         series[k] == sum(series[i] == k) """
     return (grid.sum(1) == np.where(grid.T)[1]).all()
 
+
 class Domain(object):
 
     def __init__(self, length):
@@ -49,15 +50,22 @@ class Domain(object):
 
     def __iter__(self):
         # Last missing column
-        missing_positions = np.where(np.isnan(self.grid).max(0))[0]
-        if missing_positions.size:
-            position = missing_positions.max()
-            for value in np.where(np.isnan(self.grid[:, position]))[0]:
+        missing_values = self.missing_values()
+        if not np.isnan(missing_values).all():
+            position = (~np.isnan(missing_values).max(0)).argmax()
+            available = missing_values[:, position]
+            for value in available[~np.isnan(available)]:
                 yield value, position
 
     def to_numbers(self):
         """ Convert 2-D domain into 1-D array """
         return np.dot(self.numbers, self.grid)
+
+    def missing_values(self):
+        """ Make matrix with only available missing values """
+        mask = np.isnan(self.grid)
+        values = mask * self.numbers.reshape((-1, 1))
+        return np.where(mask, values, np.nan)
 
     def prune(self): # TODO
         """ Prune unfeasible values from domain """
@@ -96,10 +104,17 @@ class Domain(object):
                 axis=0))))
         return feasibility
 
+
+def main():
+    try:
+        for i in range(4, 50):
+            t0 = time.time()
+            d = Domain(i)
+            result = d.search()
+            logging.info("{} finished in {} sec: {}"\
+                .format(i, round(time.time() - t0, 5), result))
+    except KeyboardInterrupt as e:
+        quit()
+
 if __name__ == "__main__":
-    for i in range(4, 50):
-        t0 = time.time()
-        d = Domain(i)
-        result = d.search()
-        logging.info("{} finished in {} sec: {}"\
-            .format(i, round(time.time() - t0, 5), result))
+    main()
