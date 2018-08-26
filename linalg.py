@@ -27,9 +27,10 @@ class Domain(object):
 
     def __init__(self, length):
         self.length = length
+        self.numbers = np.linspace(0, length-1, length)
         self.grid = np.empty((length, length))
         self.grid[:] = np.nan
-        self.numbers = np.linspace(0, length-1, length)
+        self.grid[0,0] = False
 
     def __str__(self):
         return str(self.grid)
@@ -49,7 +50,8 @@ class Domain(object):
         return self.grid[index]
 
     def __iter__(self):
-        # Last missing column
+        """ Generate available values from most right column
+            with available values """
         missing_values = self.missing_values()
         if not np.isnan(missing_values).all():
             position = (~np.isnan(missing_values).max(0)).argmax()
@@ -66,6 +68,18 @@ class Domain(object):
         mask = np.isnan(self.grid)
         values = mask * self.numbers.reshape((-1, 1))
         return np.where(mask, values, np.nan)
+
+    def estimate(self, f="min"):
+        """ Estimate min or max available number for each missing postion """
+        clean_bound = np.nan_to_num(self.missing_values()) -\
+            np.nan_to_num(self.to_numbers()) + np.nansum(self.to_numbers())
+
+        clean_bound = np.where(~np.isnan(self.missing_values()),
+                               clean_bound, np.nan)
+
+        estimate = eval("np.nan%s" % f)(self.missing_values(), 0)
+        all_sum = np.nansum(estimate)
+        return clean_bound + all_sum - estimate
 
     def prune(self): # TODO
         """ Prune unfeasible values from domain """
@@ -114,7 +128,7 @@ def main():
             logging.info("{} finished in {} sec: {}"\
                 .format(i, round(time.time() - t0, 5), result))
     except KeyboardInterrupt as e:
-        quit()
+        pass
 
 if __name__ == "__main__":
     main()
