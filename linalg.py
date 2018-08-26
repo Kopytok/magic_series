@@ -30,7 +30,7 @@ class Domain(object):
         self.numbers = np.linspace(0, length-1, length)
         self.grid = np.empty((length, length))
         self.grid[:] = np.nan
-        self.grid[0,0] = False
+        # self.grid[0,0] = False
 
     def __str__(self):
         return str(self.grid)
@@ -43,7 +43,6 @@ class Domain(object):
             self.grid[:, position] = \
                 np.array(range(self.length)) == value
         else:
-            assert len(position) == 2
             self.grid[position] = value
 
     def __getitem__(self, index):
@@ -53,8 +52,8 @@ class Domain(object):
         """ Generate available values from most right column
             with available values """
         missing_values = self.missing_values()
-        if not np.isnan(missing_values).all():
-            position = (~np.isnan(missing_values).max(0)).argmax()
+        if (~np.isnan(missing_values)).any():
+            position = np.where((~np.isnan(missing_values)).max(0))[0][-1]
             available = missing_values[:, position]
             for value in available[~np.isnan(available)]:
                 yield value, position
@@ -74,9 +73,7 @@ class Domain(object):
         clean_bound = np.nan_to_num(self.missing_values()) -\
             np.nan_to_num(self.to_numbers()) + np.nansum(self.to_numbers())
 
-        clean_bound = np.where(~np.isnan(self.missing_values()),
-                               clean_bound, np.nan)
-
+        clean_bound = np.where(np.isnan(self.grid), clean_bound, np.nan)
         estimate = eval("np.nan%s" % f)(self.missing_values(), 0)
         all_sum = np.nansum(estimate)
         return clean_bound + all_sum - estimate
@@ -88,14 +85,17 @@ class Domain(object):
     def search(self):
         """ Walk through domain and try each available item """
         results = set()
-        temp_domain = copy.deepcopy(self)
         for value, position in self:
+            temp_domain = copy.deepcopy(self)
             temp_domain[position] = value
             feasibile = temp_domain.prune()
             if not feasibile:
-                return set()
+                continue
 
             # If no missing values, test and save
+            if not np.isnan(temp_domain.to_numbers()).any():
+                logging.debug("Full series: {}".format(repr(temp_domain)))
+                logging.debug("Magic: {}".format(temp_domain.magic_series()))
             if not np.isnan(temp_domain.to_numbers()).any() and \
                     feasibile and \
                     temp_domain.magic_series():
