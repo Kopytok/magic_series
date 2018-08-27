@@ -14,10 +14,7 @@ def prune_sum_eq_len(domain):
     prune_flg = False
     out = domain.copy()
     for value, row in enumerate(out.grid):
-<<<<<<< HEAD
         logging.debug("Value: {}\tRow: {}".format(value, row))
-=======
->>>>>>> linalg
         for position, it in enumerate(row):
             if it == -1:
                 min_eval = out.eval(value, position, how="min")
@@ -33,10 +30,7 @@ def prune_sum_eq_len(domain):
                 if reduce(lambda x, y: x | y, constraints):
                     prune_flg = True
                     domain.grid[value, position] = 0
-<<<<<<< HEAD
         logging.debug("Domain after row check:\n%s" % repr(domain))
-=======
->>>>>>> linalg
     return prune_flg
 
 def prune_last_missing_number(domain):
@@ -99,21 +93,12 @@ def prune(domain):
     """ Return True if feasible, False otherwise """
     while domain.feasibility_test():
         constraints = [
-<<<<<<< HEAD
-            "prune_less_than_possible",
-            "prune_sum_eq_len",
-            "prune_last_missing_number",
-            "prune_fill_column",
-            "prune_known_row_sum",
-            "prune_sum_ready",
-=======
             prune_less_than_possible, # + STRONG
             prune_sum_eq_len, # + / - STRONG
             prune_last_missing_number, # +
             prune_fill_column, # +
             prune_known_row_sum, # not needed
             prune_sum_ready, # +
->>>>>>> linalg
         ]
         change_flg = True
         while change_flg:
@@ -122,18 +107,11 @@ def prune(domain):
                 try:
                     prune_flg = True
                     while prune_flg:
-<<<<<<< HEAD
-                        prune_flg = eval("%s(domain)" % func)
-                        change_flg = change_flg or prune_flg
-                        logging.debug("Changed after {} {}:\n{}"\
-                            .format(func, prune_flg, repr(domain)))
-=======
                         prune_flg = func(domain)
                         change_flg = change_flg or prune_flg
                         logging.debug("{}hanged after {}:\n{}"\
                             .format("C" if prune_flg else "Not c",
                                     func.__name__, repr(domain)))
->>>>>>> linalg
                 except IndexError as e:
                     return False
         if domain.feasibility_test():

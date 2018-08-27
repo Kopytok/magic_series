@@ -3,7 +3,7 @@ from itertools import product
 
 import numpy as np
 
-from .prune import nan_cnt, row_sum, prune
+from prune import nan_cnt, row_sum, prune
 
 MISSING_CHAR = b'\xc2\xb7'.decode('utf8')
 
@@ -52,10 +52,7 @@ class Domain(object):
                 eval_numbers.append(value)
             else:
                 missing = np.where(col == -1)[0]
-<<<<<<< HEAD
-=======
                 # "max": -1 -> last item
->>>>>>> linalg
                 eval_numbers.append(missing[{'min': 0, 'max': -1}[how]])
         return eval_numbers
 
@@ -86,15 +83,9 @@ class Domain(object):
             if it > -1:
                 rowSum = self.row_sum(position)
                 nanCnt = self.nan_cnt(position)
-<<<<<<< HEAD
-                try:
-                    available = range(rowSum, rowSum + nanCnt + 1)
-                    left_values = [x for x in available if x != value]
-=======
                 available = range(rowSum, rowSum + nanCnt + 1)
                 left_values = [x for x in available if x != value]
                 try:
->>>>>>> linalg
                     assert (it == 1 and value in list(available)) or \
                            (it == 0 and len(left_values))
                 except AssertionError as e:

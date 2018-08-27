@@ -6,7 +6,7 @@ import time
 import numpy as np
 np.seterr(divide='ignore', invalid='ignore')
 
-from linalg_prune import prune
+from prune import prune
 
 logging_path = os.path.join(os.getcwd(), "text_log.log")
 
@@ -29,7 +29,7 @@ def magic_series(grid):
 class Domain(object):
 
     def __init__(self, length):
-        from linalg_prune import prune_sum_eq_len
+        from prune import prune_sum_eq_len
 
         self.length = length
         self.numbers = np.linspace(0, length-1, length)
