@@ -22,8 +22,9 @@ def magic_series(grid):
     """ Check if grid satisfies the definition
         series[k] == sum(series[i] == k) """
     logging.debug("Grid:\n{}".format(grid))
-    logging.debug("Magic check:\n{}".format(grid.sum(1) == np.where(grid.T)[1]))
-    return (grid.sum(1) == np.where(grid.T)[1]).all()
+    magic = (grid.sum(1) == np.where(grid.T)[1])
+    logging.debug("Magic check:\n{}".format(magic))
+    return magic.all()
 
 
 class Domain(object):
@@ -121,12 +122,10 @@ class Domain(object):
                 continue
 
             # If no missing values, test and save
-            no_missing = not np.isnan(temp_domain.to_numbers()).any()
-            if no_missing:
+            if feasibile and not np.isnan(temp_domain.to_numbers()).any():
                 logging.debug("Full series: {}".format(repr(temp_domain)))
-                logging.debug("Magic: {}".format(temp_domain.magic_series()))
-            if no_missing and feasibile and temp_domain.magic_series():
-                results.add(repr(temp_domain))
+                if temp_domain.magic_series():
+                    results.add(repr(temp_domain))
 
             # Save all previous results
             results |= temp_domain.search()
